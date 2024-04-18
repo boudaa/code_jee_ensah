@@ -11,7 +11,7 @@
 	<h1>Calculatrice</h1>
 
 
-	<form action="/calculatrice/calcul" method="POST">
+	<form action="${pageContext.request.contextPath}/calcul" method="POST">
 		x : <input type="text" name="x"><br>
 		y : <input type="text" name="y"><br>
 		choisir l'opération : 
