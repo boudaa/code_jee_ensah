@@ -15,25 +15,36 @@ public class Etudiant {
 	private String cin;
 	private String prenom;
 
-	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE })
+	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@JoinTable(name = "adresse_etudiant", joinColumns = @JoinColumn(name = "id_etudiant"), inverseJoinColumns = @JoinColumn(name = "id_adresse"))
 	private Set<Adresse> adresses = new HashSet<Adresse>();
 
 	public void setAdresses(Set<Adresse> adresses) {
-		this.adresses = adresses;
-		for (Adresse add : adresses) {
-			add.getEtudiants().add(this);
+		// Dissociate existing associations
+		for (Adresse a : this.adresses) {
+			a.removeEtudiant(this); // Dissociate
+		}
+		this.adresses.clear(); // Clear all associations
+
+		// Add new associations
+		this.adresses.addAll(adresses);
+		for (Adresse a : adresses) {
+			a.addEtudiant(this); // Re-associate
 		}
 	}
 
-	public void addAdresse(Adresse add) {
-		adresses.add(add);
-		add.getEtudiants().add(this);
+	public void addAdresse(Adresse adresse) {
+		if (adresse != null && !adresses.contains(adresse)) {
+			adresses.add(adresse);
+			adresse.addEtudiant(this);
+		}
 	}
 
-	public void removeAdresse(Adresse add) {
-		adresses.remove(add);
-		add.getEtudiants().remove(this);
+	public void removeAdresse(Adresse adresse) {
+		if (adresse != null && adresses.contains(adresse)) {
+			adresses.remove(adresse); // Remove from this set
+			adresse.removeEtudiant(this); // Dissociate from the other side
+		}
 	}
 
 	@Override

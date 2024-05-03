@@ -43,21 +43,36 @@ public class Etudiant {
 	}
 
 	public void setAdresses(Set<Adresse> adresses) {
-		this.adresses = adresses;
-		for (Adresse ad : adresses) {
-			ad.setEtudiant(this);
+		// Dissociez toutes les anciennes adresses
+		if (this.adresses != null) {
+			for (Adresse adresse : this.adresses) {
+				adresse.setEtudiant(null);
+			}
+		}
 
+		this.adresses = adresses;
+
+		// Reconnectez toutes les nouvelles adresses
+		if (adresses != null) {
+			for (Adresse adresse : adresses) {
+				if (adresse.getEtudiant() != this) {
+					adresse.setEtudiant(this);
+				}
+			}
 		}
 	}
 
 	public void addAdresse(Adresse ad) {
-		adresses.add(ad);
-		ad.setEtudiant(this);
+		if (ad != null && !adresses.contains(ad)) {			
+			ad.setEtudiant(this);
+		}
 	}
 
-	public void removeAdresse(Adresse add) {
-		adresses.remove(add);
-		add.setEtudiant(null);
+	public void removeAdresse(Adresse ad) {
+		if (ad != null && adresses.contains(ad)) {
+			adresses.remove(ad);
+			ad.setEtudiant(null); 
+		}
 	}
 
 	public Long getId() {

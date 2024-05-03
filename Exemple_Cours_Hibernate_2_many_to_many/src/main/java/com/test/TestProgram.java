@@ -2,7 +2,6 @@ package com.test;
 
 import java.util.List;
 
-
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -55,154 +54,84 @@ public class TestProgram {
 		etd1.addAdresse(ad2);
 		etd1.addAdresse(ad3);
 
-		
 		System.out.println("########################## SESSION 1 #############################");
 
-		try {
+		// on obtient une session
+		session = sf.getCurrentSession();
 
-			// on obtient une session
-			session = sf.getCurrentSession();
+		// On commence une transaction
+		tx = session.beginTransaction();
 
-			// On commence une transaction
-			tx = session.beginTransaction();
-
-			// Enregistrer l'étudiants et ses adresses associées
-			session.persist(etd1); // Attention si on utilise la méthode save (propre à Hibernate) à la place de persist
+		// Enregistrer l'étudiants et ses adresses associées
+		session.persist(etd1); // Attention si on utilise la méthode save (propre à Hibernate) à la place de
+								// persist
 								// CascadeType.PERSIST ne propagera pas l'opération de persistance aux entités
 								// composites.
 
-			System.out.println("----Affichage de tous les étudiants ajoutés en base de données----");
+		System.out.println("----Affichage de tous les étudiants ajoutés en base de données----");
 
-			Query<Etudiant> query = session.createQuery("from com.bo.Etudiant");
-			List<Etudiant> list = query.getResultList();
+		Query<Etudiant> query = session.createQuery("from com.bo.Etudiant", Etudiant.class);
+		List<Etudiant> list = query.getResultList();
 
-			for (Etudiant it : list) {
-				System.out.println(it);
-			}
-
-			// On valide la transaction. La session sera fermée
-			tx.commit();
-
-		} catch (HibernateException ex) {
-
-			// Si il y a des problèmes et une transaction a été déjà crée on l'annule
-			if (tx != null) {
-				// Annulation d'une transaction
-				tx.rollback();
-
-			}
-
-			// On n'oublie pas de remonter l'erreur originale
-			throw ex;
-
-		} finally {
-
-			// Si la session n'est pas encore fermée par commit
-			if (session != null && session.isOpen()) {
-				session.close();
-			}
-
+		for (Etudiant it : list) {
+			System.out.println(it);
 		}
+
+		// On valide la transaction. La session sera fermée
+		tx.commit();
 
 		// Nouvelle session
 		System.out.println("########################## SESSION 2 #############################");
 
-		try {
+		// on obtient une nouvelle session
+		session = sf.getCurrentSession();
 
-			// on obtient une nouvelle session
-			session = sf.getCurrentSession();
+		// On commence une transaction
+		tx = session.beginTransaction();
 
-			// On commence une transaction
-			tx = session.beginTransaction();
+		// On recharge l'étudiant de la base de données
+		Etudiant etd = session.get(Etudiant.class, etd1.getId());
+		System.out.println("Nombre d'adresses de l'étudiant avant suppression = " + etd.getAdresses().size());
 
-			// On recharge l'étudiant de la base de données
-			Etudiant etd = session.get(Etudiant.class, etd1.getId());
-			System.out.println("Nombre d'adresses de l'étudiant avant suppression = " + etd.getAdresses().size());
+		// Supprimer l'une de ses adresses.
+		System.out.println("Suppresion d'une adresse de la liste des adresse de l'étudiant");
 
-			// Supprimer l'une de ses adresses.
-			System.out.println("Suppresion d'une adresse de la liste des adresse de l'étudiant");
+		etd.removeAdresse(ad0);
 
-			etd.removeAdresse(ad0);
-
-			tx.commit();
-
-		} catch (HibernateException ex) {
-
-			// Si il y a des problèmes et une transaction a été déjà crée on l'annule
-			if (tx != null) {
-				// Annulation d'une transaction
-				tx.rollback();
-
-			}
-
-			// On n'oublie pas de remonter l'erreur originale
-			throw ex;
-
-		} finally {
-
-			// Si la session n'est pas encore fermée par commit
-			if (session != null && session.isOpen()) {
-				session.close();
-			}
-
-		}
+		tx.commit();
 
 		// Nouvelle session
 		System.out.println("########################## SESSION 3 #############################");
 
-		try {
+		// on obtient une nouvelle session
+		session = sf.getCurrentSession();
 
-			// on obtient une nouvelle session
-			session = sf.getCurrentSession();
+		// On commence une transaction
+		tx = session.beginTransaction();
 
-			// On commence une transaction
-			tx = session.beginTransaction();
+		// On recharge l'étudiant de la base de données
+		etd = session.get(Etudiant.class, etd1.getId());
 
-			// On recharge l'étudiant de la base de données
-			Etudiant etd = session.get(Etudiant.class, etd1.getId());
+		System.out.println("Nombre d'adresses de l'étudiant après suppression = " + etd.getAdresses().size());
 
-			System.out.println("Nombre d'adresses de l'étudiant après suppression = " + etd.getAdresses().size());
+		System.out.println("----Affichage de tous les étudiants ajoutés en base de données----");
 
-			
-			System.out.println("----Affichage de tous les étudiants ajoutés en base de données----");
+		query = session.createQuery("from com.bo.Etudiant", Etudiant.class);
+		list = query.getResultList();
 
-			Query<Etudiant> query = session.createQuery("from com.bo.Etudiant");
-			List<Etudiant> list = query.getResultList();
-
-			for (Etudiant it : list) {
-				System.out.println(it);
-			}
-			
-			System.out.println("----Affichage de toutes les adresses ajoutés en base de données----");
-			Query<Adresse> queryAdd = session.createQuery("from com.bo.Adresse");
-			List<Adresse> listAdd = queryAdd.getResultList();
-
-			for (Adresse it : listAdd) {
-				System.out.println(it);
-			}
-
-			tx.commit();
-
-		} catch (HibernateException ex) {
-
-			// Si il y a des problèmes et une transaction a été déjà crée on l'annule
-			if (tx != null) {
-				// Annulation d'une transaction
-				tx.rollback();
-
-			}
-
-			// On n'oublie pas de remonter l'erreur originale
-			throw ex;
-
-		} finally {
-
-			// Si la session n'est pas encore fermée par commit
-			if (session != null && session.isOpen()) {
-				session.close();
-			}
-
+		for (Etudiant it : list) {
+			System.out.println(it);
 		}
+
+		System.out.println("----Affichage de toutes les adresses ajoutés en base de données----");
+		Query<Adresse> queryAdd = session.createQuery("from com.bo.Adresse", Adresse.class);
+		List<Adresse> listAdd = queryAdd.getResultList();
+
+		for (Adresse it : listAdd) {
+			System.out.println(it);
+		}
+
+		tx.commit();
 
 	}
 }

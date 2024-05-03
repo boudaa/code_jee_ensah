@@ -56,8 +56,18 @@ public class Adresse {
 		return etudiant;
 	}
 
+	// Setter pour l'étudiant qui gère la bidirectionnalité
 	public void setEtudiant(Etudiant etudiant) {
+		if (this.etudiant != null && this.etudiant != etudiant) {
+			// Dissociez de l'ancien étudiant
+			this.etudiant.getAdresses().remove(this);
+		}
+
 		this.etudiant = etudiant;
+
+		if (etudiant != null && !etudiant.getAdresses().contains(this)) {
+			etudiant.getAdresses().add(this);
+		}
 	}
 
 }

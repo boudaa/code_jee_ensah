@@ -18,6 +18,34 @@ public class Adresse {
 
 	private String ville;
 
+    public void setEtudiants(Set<Etudiant> etudiants) {
+        // Dissociate existing associations
+        for (Etudiant e : this.etudiants) {
+            e.removeAdresse(this); // Dissociate
+        }
+        this.etudiants.clear(); // Clear all associations
+
+        // Add new associations
+        this.etudiants.addAll(etudiants);
+        for (Etudiant e : etudiants) {
+            e.addAdresse(this); // Re-associate
+        }
+    }
+
+    public void addEtudiant(Etudiant etudiant) {
+        if (etudiant != null && !etudiants.contains(etudiant)) {
+            etudiants.add(etudiant);
+            etudiant.addAdresse(this);
+        }
+    }
+
+    public void removeEtudiant(Etudiant etudiant) {
+        if (etudiant != null && etudiants.contains(etudiant)) {
+            etudiants.remove(etudiant);  // Remove from this set
+            etudiant.removeAdresse(this);  // Dissociate from the other side
+        }
+    }
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o)
@@ -56,10 +84,6 @@ public class Adresse {
 
 	public Set<Etudiant> getEtudiants() {
 		return etudiants;
-	}
-
-	public void setEtudiants(Set<Etudiant> etudiants) {
-		this.etudiants = etudiants;
 	}
 
 }
