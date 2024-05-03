@@ -29,9 +29,10 @@ public class Adresse {
 	public int hashCode() {
 		return getClass().hashCode();
 	}
+
 	@Override
 	public String toString() {
-		return "Adresse [id=" + id +  ", ville=" + ville + "]";
+		return "Adresse [id=" + id + ", ville=" + ville + "]";
 	}
 
 	public Long getId() {
@@ -54,10 +55,23 @@ public class Adresse {
 		return etudiant;
 	}
 
-	public void setEtudiant(Etudiant etudiant) {
-		this.etudiant = etudiant;
+	public void removeEtudiantLink() {
+		this.etudiant = null;
 	}
-	
-	
+
+	public void setEtudiant(Etudiant etudiant) {
+
+		if (this.etudiant != null && this.etudiant != etudiant) {
+			this.etudiant.removeAdresseLink();
+		}
+
+		this.etudiant = etudiant;
+
+		if (etudiant != null && etudiant.getAdresse() != this) {
+
+			etudiant.setAdresse(this);
+		}
+
+	}
 
 }

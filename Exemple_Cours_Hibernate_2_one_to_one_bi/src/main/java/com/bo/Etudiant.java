@@ -2,21 +2,19 @@ package com.bo;
 
 import jakarta.persistence.*;
 
-
 @Entity(name = "ETUDIANT_TAB")
 public class Etudiant {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String nom;
-	private String cin;	
-	
+	private String cin;
+
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name="id_adresse_etudiant")
+	@JoinColumn(name = "id_adresse_etudiant")
 	private Adresse adresse;
 
 	private String prenom;
-
 
 	@Override
 	public boolean equals(Object o) {
@@ -32,7 +30,7 @@ public class Etudiant {
 	public int hashCode() {
 		return getClass().hashCode();
 	}
-	
+
 	@Override
 	public String toString() {
 		return "Etudiant [id=" + id + ", nom=" + nom + ", cin=" + cin + ", adresse=" + adresse + ", prenom=" + prenom
@@ -75,8 +73,23 @@ public class Etudiant {
 		return adresse;
 	}
 
+	public void removeAdresseLink() {
+		this.adresse = null;
+	}
+
 	public void setAdresse(Adresse adresse) {
+
+		if (this.adresse != null && this.adresse != adresse) {
+			this.adresse.removeEtudiantLink();
+		}
+
 		this.adresse = adresse;
+
+		if (adresse != null && adresse.getEtudiant() != this) {
+
+			adresse.setEtudiant(this);
+		}
+
 	}
 
 }
