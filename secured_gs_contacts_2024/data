@@ -1,0 +1,190 @@
+-- phpMyAdmin SQL Dump
+-- version 5.2.0
+-- https://www.phpmyadmin.net/
+--
+-- Hôte : 127.0.0.1
+-- Généré le : jeu. 23 mai 2024 à 17:36
+-- Version du serveur : 10.4.27-MariaDB
+-- Version de PHP : 8.0.25
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Base de données : `gs_contact_database`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `contact`
+--
+
+CREATE TABLE `contact` (
+  `idContact` bigint(20) NOT NULL,
+  `address` varchar(255) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `firstName` varchar(255) DEFAULT NULL,
+  `gender` varchar(255) DEFAULT NULL,
+  `lastName` varchar(255) DEFAULT NULL,
+  `phoneNumber` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Déchargement des données de la table `contact`
+--
+
+INSERT INTO `contact` (`idContact`, `address`, `email`, `firstName`, `gender`, `lastName`, `phoneNumber`) VALUES
+(1, 'dsqdd', 'dsqdsqd@dsdsqd.fr', 'cccs', 'Male ', 'dqsd', 'dqsd'),
+(3, 'dsqd', 't.bouddqsdaa@uae.ac.ma', 'dqsddqsdqsd', 'Male ', 'dqs', 'dqsddsqdqsd');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `personne`
+--
+
+CREATE TABLE `personne` (
+  `idPersonne` bigint(20) NOT NULL,
+  `cin` varchar(255) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `nom` varchar(255) DEFAULT NULL,
+  `prenom` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Déchargement des données de la table `personne`
+--
+
+INSERT INTO `personne` (`idPersonne`, `cin`, `email`, `nom`, `prenom`) VALUES
+(1, 'R1111', 'boudaa@aaa.fr', 'boudaa', 'tarik');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `role`
+--
+
+CREATE TABLE `role` (
+  `idRole` bigint(20) NOT NULL,
+  `nomRole` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Déchargement des données de la table `role`
+--
+
+INSERT INTO `role` (`idRole`, `nomRole`) VALUES
+(1, 'ROLE_ADMIN'),
+(4, 'ROLE_USER');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `useraccount`
+--
+
+CREATE TABLE `useraccount` (
+  `accountNonExpired` bit(1) NOT NULL,
+  `accountNonLocked` bit(1) NOT NULL,
+  `credentialsNonExpired` bit(1) NOT NULL,
+  `enabled` bit(1) NOT NULL,
+  `idCompte` bigint(20) NOT NULL,
+  `idRole` bigint(20) DEFAULT NULL,
+  `idUtilisateur` bigint(20) DEFAULT NULL,
+  `login` varchar(255) DEFAULT NULL,
+  `password` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Déchargement des données de la table `useraccount`
+--
+
+INSERT INTO `useraccount` (`accountNonExpired`, `accountNonLocked`, `credentialsNonExpired`, `enabled`, `idCompte`, `idRole`, `idUtilisateur`, `login`, `password`) VALUES
+(b'1', b'1', b'1', b'1', 1, 1, 1, 'admin', '{bcrypt}$2a$10$vsjRwUSUi2B/jlw4ATXEN.B2IIcVY8ourImFZnWcW1tLz3G6mLfpe'),
+(b'1', b'1', b'1', b'1', 19, 4, 1, 'user', '{bcrypt}$2a$10$vsjRwUSUi2B/jlw4ATXEN.B2IIcVY8ourImFZnWcW1tLz3G6mLfpe');
+
+--
+-- Index pour les tables déchargées
+--
+
+--
+-- Index pour la table `contact`
+--
+ALTER TABLE `contact`
+  ADD PRIMARY KEY (`idContact`),
+  ADD UNIQUE KEY `UK_h4vghcwkgbxmc143fm85vn7cd` (`email`),
+  ADD UNIQUE KEY `UK_rhkdmhj64dvbatc995r2v4y5e` (`phoneNumber`);
+
+--
+-- Index pour la table `personne`
+--
+ALTER TABLE `personne`
+  ADD PRIMARY KEY (`idPersonne`),
+  ADD UNIQUE KEY `UK_bklcnet9j9pipv0cj1lysvwqw` (`cin`);
+
+--
+-- Index pour la table `role`
+--
+ALTER TABLE `role`
+  ADD PRIMARY KEY (`idRole`);
+
+--
+-- Index pour la table `useraccount`
+--
+ALTER TABLE `useraccount`
+  ADD PRIMARY KEY (`idCompte`),
+  ADD UNIQUE KEY `UK_f4migbcq847t9nm048tgwi0ih` (`login`),
+  ADD KEY `FK8llkq2xd41313osopj6g655oi` (`idUtilisateur`),
+  ADD KEY `FK1q94m9r9n207oqsoetjej5y1` (`idRole`);
+
+--
+-- AUTO_INCREMENT pour les tables déchargées
+--
+
+--
+-- AUTO_INCREMENT pour la table `contact`
+--
+ALTER TABLE `contact`
+  MODIFY `idContact` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT pour la table `personne`
+--
+ALTER TABLE `personne`
+  MODIFY `idPersonne` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT pour la table `role`
+--
+ALTER TABLE `role`
+  MODIFY `idRole` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT pour la table `useraccount`
+--
+ALTER TABLE `useraccount`
+  MODIFY `idCompte` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+
+--
+-- Contraintes pour les tables déchargées
+--
+
+--
+-- Contraintes pour la table `useraccount`
+--
+ALTER TABLE `useraccount`
+  ADD CONSTRAINT `FK1q94m9r9n207oqsoetjej5y1` FOREIGN KEY (`idRole`) REFERENCES `role` (`idRole`),
+  ADD CONSTRAINT `FK8llkq2xd41313osopj6g655oi` FOREIGN KEY (`idUtilisateur`) REFERENCES `personne` (`idPersonne`);
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
